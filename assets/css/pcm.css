@@ -1,0 +1,10 @@
+.opletten{
+    color:rgb(0, 34, 255);
+    font-weight:bold;
+}
+
+
+.manual img {
+    max-height:300px;
+    width: fit-content;
+}
