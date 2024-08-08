@@ -1,10 +1,15 @@
 window.addEventListener('load', async e => {
     const url = new URL(document.location);
-    const pcm = await fetch(`/api/docs/assets/yaml/pcm`).then(e => e.json());
+    const pcmuri = `https://aliconnect.nl/pagesgroup/api/index.php?json=pcm`;
+    if (url.searchParams.has('publish')) {
+        const pcm = await fetch(`/api/docs/assets/yaml/pcm`).then(e => e.json());
+        fetch(pcmuri, {method: 'POST', body: JSON.stringify(pcm)});
+    }
+    const pcm = await fetch(pcmuri).then(e => e.json());
     const {properties} = pcm.quote;
     if (url.searchParams.has('projectnr')) {
         const projectnr = url.searchParams.get('projectnr');
-        const dataurl = `/api/?json=${projectnr}`;
+        const dataurl = `https://aliconnect.nl/pagesgroup/api/index.php?json=${projectnr}`;
         let row = await fetch(dataurl).then(e => e.json());
         console.log({pcm,row});
         $(document.body).clear().append(
