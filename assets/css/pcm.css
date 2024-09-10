@@ -8,3 +8,15 @@
     max-height:300px;
     width: fit-content;
 }
+@media only print {
+    form {
+        display: none;
+    }
+}
+@media not print {
+    body>div>div {
+        flex:0 0 18cm;
+        overflow:auto;
+    }
+}
+

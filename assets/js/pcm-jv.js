@@ -1,4 +1,4 @@
-console.log('MAX1');
+console.log('PCM-JV');
 window.addEventListener('load', async e => {
     const url = new URL(document.location);
     const pcmuri = `https://aliconnect.nl/pagesgroup/api/index.php?json=pcm`;
@@ -25,21 +25,16 @@ window.addEventListener('load', async e => {
                 $('div').class('spec'),
             ),
         );
-
-
         function build(){
             const props = Object.entries(properties);
-            // Filter legends to include only those that have associated properties
             const legends = props.map(p => p[1].legend).filter(legend => 
                 props.some(([n, p]) => p.legend === legend)
             ).unique();
-
             const doc = {
                 body(title, content) {
                     return $('div').class('spec').append(
                         $('link').href("/postkantoor/App/pcm/assets/css/doc.css").rel("stylesheet"),
                         $('link').href("https://aliconnect.nl/sdk-1.0.0/lib/aim/font/AliconnectIcons.css").rel("stylesheet"),
-                        // $('link').href("https://aliconnect.nl/sdk-1.0.0/lib/aim/css/print.css").rel("stylesheet"),
                         $('table').style('width:100%;table-layout:fixed;').append(
                             $('thead').append(
                                 $('tr').append(
@@ -167,9 +162,6 @@ window.addEventListener('load', async e => {
                                 $('th').text('Signature'),
                                 $('td').style('position:relative;height:18mm;').append(
                                     $('img').src('http://pol-dc01.polymac.intra/assets/image/max-van-kampen-signature.png').style('position:absolute;width:60mm;left:-13mm;top:-6mm;'),
-                                    // $('div').text('M.J. van Kampen').style('margin-top;15mm;'),
-                                    // $('div').text('General Manager').style('font-size:0.9em;'),
-
                                 ),
                             ),
                             $('tr').style('z-index:-1;').append(
@@ -179,14 +171,12 @@ window.addEventListener('load', async e => {
                         ),
                     ));
                 },
-
                 async manual(){
                     const md1 = await fetch("assets/md/manual.md").then(e => e.text());
                     const project = await Aim.loadExcelSheet('/project/Ayva/P13544_P230518 PLEA 1-cav/Polymac-project-P230518.xlsx');
                     console.log({project});
-                    
                     const html = md1.render();
-                    // console.log(html);
+                    console.log(html);
                     return doc.body('User Manual for the PL (Polymac Label) machine', $('div').class('spec').append(
                         $('link').href("/postkantoor/App/pcm/assets/css/doc.css").rel("stylesheet"),
                         $('div').html(html),
@@ -194,24 +184,9 @@ window.addEventListener('load', async e => {
                         (await doc.io()),
                     ));
                 },
-                // async manual2(){
-                //     const md1 = await fetch("assets/md/manual.md").then(e => e.text());
-                //     const project = await Aim.loadExcelSheet('/project/Ayva/P13544_P230518 PLEA 1-cav/Polymac-project-P230518.xlsx');
-                //     console.log({project});
-                    
-                //     const html = md1.render();
-                //     // console.log(html);
-                //     return doc.body('Manual', $('div').class('spec').append(
-                //         $('link').href("/postkantoor/App/pcm/assets/css/doc.css").rel("stylesheet"),
-                //         $('div').html(html),
-                //         // (await doc.parts()),
-                //         // (await doc.io()),
-                //     ));
-                // },
                 async parts(){
                     const project = await Aim.loadExcelSheet('/project/Ayva/P13544_P230518 PLEA 1-cav/Polymac-project-P230518.xlsx');
                     const {partslist} = project;
-                    // const types = partslist.map(row => row.type).unique();
                     function parttable(parts){
                         return $('table').class('grid').append(
                             $('thead').append(
@@ -292,139 +267,46 @@ window.addEventListener('load', async e => {
                     );
                 },
                 spec(selprops){
-                    // const selprops = props.filter(([n,p]) => !p.doctypes || p.doctypes.includes(sel)); // filter weer aangezet door JV
-                    // console.log({selprops});
                     console.log({selprops});
-                    return $('div').append(
-                        $('link').href("/postkantoor/App/pcm/assets/css/doc.css").rel("stylesheet"),
-                        $('table').style('width:100%;table-layout:fixed;').append(
-                            $('thead').append(
-                                $('tr').append(
-                                    $('td').colspan(2).style('padding:0 0 0 10mm;').append(
-                                        $('table').style('width:100%;table-layout:fixed;margin:0;').append(
-                                            $('tbody').append(
-                                                $('tr').append(
-                                                    $('td').append($('img').src('assets/image/logo-pages.png').style('height:8mm;')),
-                                                    $('td').append($('img').src('assets/image/logo-polymac.jpg').style('height:8mm;')).style('width:50mm;'),
+                    return pm.letter({
+                        title: 'Titel van document test 24',
+                        company: 'Jansen en co',
+                        content: $('div').append(
+                            $('div').class('spec').append(
+                                $('h1').text('Technical specifications').style('page-break-before:always;'),
+                                legends.map(legend => {
+                                    const selpropsForLegend = selprops.filter(([n, p]) => p.legend === legend);
+                                    if (selpropsForLegend.length > 0) {
+                                        return [
+                                            $('h2').text(legend),
+                                            $('table').class('grid').style('width:100%;').append(
+                                                $('tbody').append(
+                                                    selpropsForLegend.map(propcell)
                                                 )
                                             )
-                                        )
-                                    )
-                                )
-                            ),
-                            $('tbody').append(
-                                $('tr').append(
-                                    $('td').colspan(2).style('padding:0 0 0 10mm;').append(
-                                        $('table').style('width:100%;table-layout:fixed;margin:0;').append(
-                                            $('tbody').append(
-                                                $('tr').append(
-                                                    $('td').style('vertical-align:middle;padding:0;').append(
-                                                        $('div').text('<Company>').style('font-weight:bold;'),
-                                                        $('div').text('<Address1>'),
-                                                        $('div').text('<Address2>'),
-                                                        $('div').text('<Country>'),
-                                                    ),
-                                                    $('td').style('width:50mm;font-size:9pt;padding:0;').append(
-                                                        $('div').text('Polymac B.V.').style('font-weight:bold;margin-bottom:5px;'),
-                                                        $('div').text('Morsestraat 20, 6716 AH Ede'),
-                                                        $('div').text('P.O. Box 552, 6710 BN Ede'),
-                                                        $('div').text('The Netherlands').style('margin-bottom:5px;'),
-                                                        $('div').text('E info@polymac.pagesgroup.nl'),
-                                                        $('div').text('I www.pagesgroup.nl'),
-                                                        $('div').text('T +31 (0)318 648 600'),
-                                                        $('div').text('F +31 (0)318 648 610'),
-                                                        $('div').text('KvK Arnhem 09044682'),
-                                                    ),
-                                                ),
-                                            ),
-                                        ),
-                                        $('table').style('width:100%;margin:20px 0;').append(
-                                            $('tbody').append(
-                                                $('tr').append(
-                                                    $('th').style('width:100%;').text('Title:'),
-                                                    $('th').style('min-width:50mm;').text('Date:'),
-                                                ),
-                                                $('tr').append(
-                                                    $('td').style('width:100%;').text('Quatation'),
-                                                    $('td').style('min-width:50mm;').text(new Date().toLocaleDateString()),
-                                                ),
-                                                $('tr').append(
-                                                    $('th').style('width:100%;').text('Subject:'),
-                                                    $('th').style('min-width:50mm;').text('Our reference:'),
-                                                ),
-                                                $('tr').append(
-                                                    $('td').style('width:100%;').text('PBM-HP Plastic Handle Fitting Machine #2 for mats'),
-                                                    $('td').style('min-width:50mm;').text('PA 13676'),
-                                                ),
-                                            ),
-                                        ),
-                                        $('p').text(`Dear Mr. Hallberg,`),
-                                        $('p').text(`With reference to your inquiry, we have pleasure submitting our quotation for a High Speed Plastic handle fitting machine for your <name>. We have based our offer on the specifications received.`),
-                                        $('p').text(`We trust that our offer is in full compliance with your specifications and we look forward to hearing from you soon.`),
-                                        $('p').text(`Sincerely Yours,`),
-                                        $('p').text(`Polymac b.v.`),
-                                        $('p').html(`Peter Alink<br><small>Director of Sales</small>`),
-
-                                        // $('h1').text(sel.toUpperCase()).style('page-break-before:always;'),
-                                        $('div').class('spec').append(
-                                            $('h1').text('Technical specifications').style('page-break-before:always;'),
-                                            legends.map(legend => {
-                                                // Filter out properties that match the current legend
-                                                const selpropsForLegend = selprops.filter(([n, p]) => p.legend === legend);
-                                                if (selpropsForLegend.length > 0) {
-                                                    return [
-                                                        $('h2').text(legend),
-                                                        $('table').class('grid').style('width:100%;').append(
-                                                            $('tbody').append(
-                                                                selpropsForLegend.map(propcell)
-                                                            )
-                                                        )
-                                                    ];
-                                                }
-                                            }),
-                                        ),
-                                    ),
-                                ),
-                            ),
-                            $('tfoot').append(
-                                $('tr').append(
-                                    $('td').colspan(2).style('height:15mm;').append(
-                                        $('table').style('position:fixed;bottom:0;width:100%;table-layout:fixed;margin:0;').append(
-                                            $('tbody').append(
-                                                $('tr').append(
-                                                    $('td').text('Docnaam').style('width:50mm;'),
-                                                )
-                                            )
-                                        )
-                                    )
-                                )
+                                        ];
+                                    }
+                                }),
                             ),
                         ),
-                    );
+                    });
                 },
-                // quote(){
-                //     doc.spec('quote');
-                // },
             }
     
             function propcell(entry){
                 const [name,prop] = entry;
                 if (row[name]) {
-                // console.log({name});
                 const tr = $('tr').append(
                     $('th').text(prop.title || name).style('width:60mm;'),
                 )
-
                 if (prop.check) {
                     const [key, values] = Object.entries(prop.check[0])[0];
                     const selectedValue = row[key];
                     const shouldDisplay = values.includes(selectedValue);
-                    // console.log({key, values, selectedValue}, `Should display ${prop.title}:`, shouldDisplay);
                     if(!shouldDisplay){
                         return null;
                     }
                 }
-
                 const td = $('td').parent(tr);
                 if (prop.options) {
                     const option = prop.options.find(o => o.value == row[name]) || {};
@@ -432,12 +314,10 @@ window.addEventListener('load', async e => {
                         const [key, values] = Object.entries(option.check[0])[0];
                         const selectedValue = row[key];
                         const shouldDisplay = values.includes(selectedValue);
-                        // console.log({key, values, selectedValue}, `Should display ${option.title}:`, shouldDisplay);
                         if(!shouldDisplay){
                             return null;
                         }
                     }
-
                     td.text(option.title || option.value, prop.unit);
                     if (option.description) {
                         $('div').parent(td).text(option.description);
@@ -448,9 +328,7 @@ window.addEventListener('load', async e => {
                 } else {
                     td.text(row[name], prop.unit);
                 }
-
                 return tr;
-
                 }
             }
             $('div.spec').clear().append(
@@ -464,21 +342,10 @@ window.addEventListener('load', async e => {
                     $('button').text('Workmap').on('click', e=> {
                         window.open('http://pol-dc01.polymac.intra/postkantoor/App/pcm/doc-viewer.html');
                     })
-
-                    // $('button').text('Manual2').on('click', async e => (await doc.manual2()).print()),
                 ),
                 doc.spec(props),
-                // legends.map(legend => [
-                //     $('h1').text(legend),
-                //     $('table').class('grid').style('width:100%;').append(
-                //         $('tbody').append(
-                //             props.filter(([n,p]) => p.legend == legend).map(propcell),
-                //         ),
-                //     )
-                // ])
             );
         }
-    
         build();
     } else {
         console.log({pcm});
